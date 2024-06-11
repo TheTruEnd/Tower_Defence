@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c479eb788b7bfb7419168c27b29e1700, type: 3}
   m_Name: Game Data
   m_EditorClassIdentifier: 
-  listSeasonData: []
+  listSeasonData:
+  - listLevelData:
+    - {fileID: 11400000, guid: 495fd144bec972a48a89c820686ffc29, type: 2}
+    - {fileID: 11400000, guid: 5149043b213ec19469d8e25a05188191, type: 2}
+    - {fileID: 11400000, guid: ca83180aa307d0d438ef7829f9e98a29, type: 2}
