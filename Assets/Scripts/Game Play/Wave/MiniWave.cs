@@ -4,15 +4,66 @@ using UnityEngine;
 
 public class MiniWave : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int miniWaveID;
+    public Wave wave;
+    public MiniWaveData miniWaveData;
+
+    public List<MonsterData> listMonsterDatas;
+    public List<Monster> listMonsters;
+    public float spawnCoolDown;
+
+    private Transform waveTrf;
+    private Transform spawnerTrf;
+    public Pathway pathWay;
+
+    public void Init(MiniWaveData data)
     {
-        
+        miniWaveData = data;
+        spawnCoolDown = data.spawnCooldown;
+
+        var listMonsterID = data.listMonstersID;
+        for (int i = 0; i < listMonsterID.Count; i++)
+        {
+            listMonsterDatas.Add(LevelManager.Instance.dataBase.listMonstersData[listMonsterID[i]]);
+        }
+
+        spawnerTrf = LevelManager.Instance.listSpawners[data.spawnerID].transform;
+        waveTrf = LevelManager.Instance.listSpawners[data.spawnerID].transform;
+        pathWay = LevelManager.Instance.listPathways[data.pathWayID];
+        transform.SetParent(waveTrf);
+
+        StartCoroutine(SpawnerMiniWave());
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator SpawnerMiniWave()
     {
-        
+        for (int i = 0; i < listMonsterDatas.Count; i++)
+        {
+            SpawnEnermy(i);
+            yield return new WaitForSeconds(spawnCoolDown);
+        }
+    }
+
+    public void SpawnEnermy(int Idata)
+    {
+        var enermy = PoolingManager.Spawn(LevelManager.Instance.dataBase.listMonstersData[miniWaveData.listMonstersID[Idata]].monsterPrefab);
+        enermy.name = listMonsterDatas[Idata].monsterName + " " + (Idata + 1);
+        enermy.miniWave = this;
+        enermy.IDIWave = Idata;
+        enermy.transform.position = spawnerTrf.position;
+        enermy.InitMonster(listMonsterDatas[Idata]);
+        listMonsters.Add(enermy);
+        enermy.transform.SetParent(transform);
+    }
+
+    public void checkIfAllEnermyDead()
+    {
+        if (listMonsters.Count == 0)
+        {
+            wave.listMiniWaves.Remove(this);
+            wave.CheckIfAllMiniWaveClear();
+            Destroy(gameObject);
+            
+        }
     }
 }

@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int spawnerID;
+    public SpawnerData spawnerData;
 
-    // Update is called once per frame
-    void Update()
+    public void InitSpawner(SpawnerData data)
     {
-        
+        spawnerData = data;
+        transform.position = data.position;
     }
 }
